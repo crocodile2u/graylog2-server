@@ -22,13 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import org.graylog.autovalue.WithBeanGetter;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 
 @AutoValue
 @WithBeanGetter
 @JsonAutoDetect
-public abstract class SessionResponse {
+public abstract class DefaultSessionResponse {
     @JsonProperty("valid_until")
     public abstract Date validUntil();
 
@@ -38,15 +37,10 @@ public abstract class SessionResponse {
     @JsonProperty("username")
     public abstract String username();
 
-    @JsonProperty("id_token")
-    @Nullable
-    public abstract String idToken();
-
     @JsonCreator
-    public static SessionResponse create(@JsonProperty("valid_until") Date validUntil,
+    public static DefaultSessionResponse create(@JsonProperty("valid_until") Date validUntil,
                                          @JsonProperty("session_id") String sessionId,
-                                         @JsonProperty("username") String username,
-                                         @JsonProperty("id_token") @Nullable String idToken) {
-        return new AutoValue_SessionResponse(validUntil, sessionId, username, idToken);
+                                         @JsonProperty("username") String username) {
+        return new AutoValue_DefaultSessionResponse(validUntil, sessionId, username);
     }
 }

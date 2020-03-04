@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -77,8 +76,7 @@ public class SessionCreator {
 
             subject.login(authToken);
 
-            final List principals = subject.getPrincipals().asList();
-            final String username = principals.get(0).toString();
+            String username = subject.getPrincipal().toString();
             final User user = userService.load(username);
 
             if (user != null) {
@@ -88,12 +86,6 @@ public class SessionCreator {
                 // set a sane default. really we should be able to load the user from above.
                 session.setTimeout(TimeUnit.HOURS.toMillis(8));
             }
-
-            if (principals.size() > 1) {
-                final Optional<String> idToken = Optional.ofNullable(principals.get(1).toString());
-                idToken.ifPresent(s -> session.setAttribute("id_token", s));
-            }
-
             session.touch();
 
             // save subject in session, otherwise we can't get the username back in subsequent requests.
